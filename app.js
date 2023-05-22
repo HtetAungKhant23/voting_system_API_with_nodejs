@@ -1,33 +1,21 @@
 const express = require('express');
-const fs = require('fs').promises;
-const path = require('path');
 const voteRoutes = require('./routes/vote');
+const bodyparser = require("body-parser")
 
 const app = express();
-const dataFile = path.join(__dirname, "file.json");
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+// app.use(bodyparser.urlencoded({extended: true}))
 
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Method', 'GET,PUT,POST,PATCH,UPDATE,DELETE');
+    res.setHeader('Access-Control-Allow-Header', 'Content-Type, Authorization');
     next();
 });
 
-// app.get('/vote', (req, res) => {
-//     fs.readFile(dataFile, 'utf-8')
-//         .then(data => {
-//             console.log(data, 'hayhay');
-//             console.log(typeof(data));
-//             const parseData = JSON.parse(data);
-//             console.log(parseData, 'hihi', typeof(parseData));
-//             res.status(200).json({
-//                 vote: parseData
-//             })
-//         })
-//         .catch(err => console.log(err));
-
-// });
+app.use('/vote', voteRoutes);
 
 app.use('/user', voteRoutes);
-
 
 app.listen(8080, ()=>console.log('server is running!'));
